@@ -15,7 +15,7 @@
             font-family: 'Arial', sans-serif;
             background-color: #fdf2f2;
             text-align: center;
-            overflow: hidden;
+            overflow: hidden; /* Important so the button doesn't create scrollbars */
         }
 
         img {
@@ -36,6 +36,7 @@
             justify-content: center;
             align-items: center;
             margin-top: 20px;
+            position: relative; /* Helps contain the buttons */
         }
 
         button {
@@ -45,6 +46,7 @@
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
+            z-index: 10;
         }
 
         #yesBtn {
@@ -57,13 +59,13 @@
             background-color: #f44336;
             color: white;
             font-weight: bold;
-            position: relative;
+            position: relative; /* Essential for movement */
         }
     </style>
 </head>
 <body>
 
-    <img id="mainGif" src="https://media1.tenor.com/m/hnCLe_l5aKkAAAAC/mocha-bear.gif" alt="Please?">
+    <img id="mainGif" src="https://media1.tenor.com/m/hnCLe_l5aKkAAAAC/mocha-bear.gif" alt="Cute Bear">
     
     <h1 id="questionText">Will you be my Valentine?</h1>
     
@@ -78,23 +80,28 @@
         const questionText = document.getElementById('questionText');
         const mainGif = document.getElementById('mainGif');
 
-        noBtn.addEventListener('click', () => {
-            let currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
-            let currentPadding = parseFloat(window.getComputedStyle(yesBtn).paddingTop);
+        // 1. MAKE THE NO BUTTON RUN AWAY (Teleport Logic)
+        noBtn.addEventListener('mouseover', () => {
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
             
-            yesBtn.style.fontSize = (currentSize * 1.4) + 'px';
-            yesBtn.style.padding = (currentPadding * 1.4) + 'px ' + (currentPadding * 1.8) + 'px';
-            
-            const phrases = ["Are you sure?", "Really?", "Think again!", "Last chance!", "Saja please!", "Don't do this!", "I'm gonna cry..."];
-            const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
-            noBtn.innerText = randomPhrase;
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = `${x}px`;
+            noBtn.style.top = `${y}px`;
         });
 
+        // 2. GROWTH LOGIC (Backup in case she manages to click it)
+        noBtn.addEventListener('click', () => {
+            const currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+            yesBtn.style.fontSize = (currentSize * 1.5) + 'px';
+            yesBtn.style.padding = (parseFloat(window.getComputedStyle(yesBtn).paddingTop) * 1.5) + 'px ' + (parseFloat(window.getComputedStyle(yesBtn).paddingRight) * 1.5) + 'px';
+        });
+
+        // 3. SUCCESS STATE
         yesBtn.addEventListener('click', () => {
             document.getElementById('buttonGroup').style.display = 'none';
             questionText.innerText = "YAYYY!!! ❤️";
-            
-            // FIXED IMAGE: Celebration bear kissing
+            // Celebration Image
             mainGif.src = "https://media1.tenor.com/m/gUiu1zyqUHEAAAAC/bear-kiss-bear-kisses.gif";
         });
     </script>

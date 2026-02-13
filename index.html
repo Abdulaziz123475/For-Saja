@@ -83,7 +83,7 @@
 <body>
 
     <div class="container">
-        <img id="mainGif" src="https://media1.tenor.com/m/h9_w5U9T2YcAAAAC/tom-and-jerry-please.gif" alt="Tom begging">
+        <img id="mainGif" src="https://media.giphy.com/media/NKmXVFgwd8HKw/giphy.gif" alt="Spongebob begging">
         
         <h1 id="questionText">Will you be my Valentine?</h1>
         
@@ -123,7 +123,6 @@
 
         function moveButton() {
             // 1. Calculate random position strictly within screen bounds
-            // We subtract the button size (approx 150px) to ensure it doesn't go off edge
             const maxX = window.innerWidth - noBtn.offsetWidth - 20;
             const maxY = window.innerHeight - noBtn.offsetHeight - 20;
 
@@ -131,7 +130,7 @@
             const randomY = Math.random() * maxY;
 
             // 2. Apply new position
-            noBtn.style.position = 'fixed'; // Breaks it out of the layout
+            noBtn.style.position = 'fixed'; 
             noBtn.style.left = randomX + 'px';
             noBtn.style.top = randomY + 'px';
 
@@ -155,8 +154,8 @@
             // Update Text
             questionText.innerText = "YAYYY!!! See you on the 14th! ❤️";
 
-            // SPONGEBOB CELEBRATION GIF
-            mainGif.src = "https://media1.tenor.com/m/tH0-K3W_VwIAAAAC/spongebob-squarepants-hearts.gif";
+            // SUCCESS GIF: Drooling (Celebration)
+            mainGif.src = "https://media.giphy.com/media/rfLAnHKzt1PIUiZNPR/giphy.gif";
         });
     </script>
 </body>

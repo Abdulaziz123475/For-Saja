@@ -13,25 +13,28 @@
             height: 100vh;
             margin: 0;
             font-family: 'Arial', sans-serif;
-            background-color: #fdf2f2;
-            overflow: hidden; /* Prevents scrollbars */
+            background-color: #fdf2f2; /* Light pink background */
+            overflow: hidden; /* CRITICAL: Prevents scrollbars when button moves */
         }
 
         .container {
             text-align: center;
+            position: relative;
             z-index: 1;
         }
 
         img {
-            max-width: 250px;
+            max-width: 300px; /* Good size for phones and laptops */
             height: auto;
+            border-radius: 15px;
             margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
         h1 {
             color: #d32f2f;
             font-size: 2rem;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .buttons {
@@ -40,43 +43,47 @@
             justify-content: center;
             align-items: center;
             position: relative;
+            height: 60px; /* Reserves space for buttons */
         }
 
         button {
-            padding: 15px 30px;
+            padding: 15px 40px;
             font-size: 1.2rem;
             border: none;
-            border-radius: 10px;
+            border-radius: 50px; /* Rounded pill shape */
             cursor: pointer;
-            transition: transform 0.2s ease;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            white-space: nowrap; /* Keeps text on one line */
         }
 
         #yesBtn {
             background-color: #4caf50;
             color: white;
-            font-weight: bold;
-            z-index: 10;
+            z-index: 100; /* Yes is always on top */
+            box-shadow: 0 4px 6px rgba(76, 175, 80, 0.3);
+        }
+
+        #yesBtn:hover {
+            transform: scale(1.05);
+            background-color: #45a049;
         }
 
         #noBtn {
             background-color: #f44336;
             color: white;
-            font-weight: bold;
-            position: absolute; /* Allows it to move freely */
-            left: 50%; /* Start next to Yes button (adjust if needed) */
-            transform: translateX(60px); /* Push it to the right of center */
+            position: absolute; /* Allows movement */
+            box-shadow: 0 4px 6px rgba(244, 67, 54, 0.3);
+            /* Start slightly to the right */
+            left: 60%; 
         }
-        
-        /* Special hidden class for the result */
-        .hidden {
-            display: none;
-        }
+
     </style>
 </head>
 <body>
 
-    <div class="container" id="mainContainer">
-        <img id="mainGif" src="https://raw.githubusercontent.com/manishsaraan/valentine/master/img/header.gif" alt="Bear Asking">
+    <div class="container">
+        <img id="mainGif" src="https://media1.tenor.com/m/h9_w5U9T2YcAAAAC/tom-and-jerry-please.gif" alt="Tom begging">
         
         <h1 id="questionText">Will you be my Valentine?</h1>
         
@@ -91,40 +98,65 @@
         const noBtn = document.getElementById('noBtn');
         const questionText = document.getElementById('questionText');
         const mainGif = document.getElementById('mainGif');
-        const mainContainer = document.getElementById('mainContainer');
 
-        // 1. TELEPORT LOGIC (Keeps it on screen)
+        const phrases = [
+            "No",
+            "Are you sure?",
+            "Really?",
+            "Think again!",
+            "Last chance!",
+            "Surely not?",
+            "You might regret this!",
+            "Give it another thought!",
+            "Are you absolutely certain?",
+            "This could be a mistake!",
+            "Have a heart!",
+            "Don't be so cold!",
+            "Change of heart?",
+            "Wouldn't you reconsider?",
+            "Is that your final answer?",
+            "You're breaking my heart ;(",
+            "Plsss? :("
+        ];
+
+        let phraseIndex = 0;
+
         function moveButton() {
-            // Get the screen width and height
-            const maxWidth = window.innerWidth - noBtn.offsetWidth - 20; 
-            const maxHeight = window.innerHeight - noBtn.offsetHeight - 20;
+            // 1. Calculate random position strictly within screen bounds
+            // We subtract the button size (approx 150px) to ensure it doesn't go off edge
+            const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+            const maxY = window.innerHeight - noBtn.offsetHeight - 20;
 
-            // Generate random numbers within the safe area
-            const randomX = Math.random() * maxWidth;
-            const randomY = Math.random() * maxHeight;
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
 
-            // Apply new position
-            noBtn.style.position = 'fixed'; // Use fixed to ignore parent layout
+            // 2. Apply new position
+            noBtn.style.position = 'fixed'; // Breaks it out of the layout
             noBtn.style.left = randomX + 'px';
             noBtn.style.top = randomY + 'px';
-            noBtn.style.transform = 'none'; // Reset initial transform
+
+            // 3. Change text randomly
+            phraseIndex = (phraseIndex + 1) % phrases.length;
+            noBtn.innerText = phrases[phraseIndex];
         }
 
-        // Trigger move on Hover (Desktop) and Click (Mobile/Touch)
+        // Move on Hover (Desktop)
         noBtn.addEventListener('mouseover', moveButton);
+        
+        // Move on Click/Tap (Mobile)
         noBtn.addEventListener('click', moveButton);
 
-        // 2. SUCCESS LOGIC
+        // Success Action
         yesBtn.addEventListener('click', () => {
-            // Hide the No button
+            // Hide No button
             noBtn.style.display = 'none';
             yesBtn.style.display = 'none';
 
-            // Change Text
-            questionText.innerText = "YAYYY!!! ❤️";
-            
-            // Change Image to the Kissing Bear (Reliable Link)
-            mainGif.src = "https://raw.githubusercontent.com/manishsaraan/valentine/master/img/yes.gif";
+            // Update Text
+            questionText.innerText = "YAYYY!!! See you on the 14th! ❤️";
+
+            // SPONGEBOB CELEBRATION GIF
+            mainGif.src = "https://media1.tenor.com/m/tH0-K3W_VwIAAAAC/spongebob-squarepants-hearts.gif";
         });
     </script>
 </body>

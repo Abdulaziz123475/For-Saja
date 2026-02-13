@@ -15,19 +15,21 @@
             font-family: 'Arial', sans-serif;
             background-color: #fdf2f2;
             text-align: center;
-            overflow: hidden; /* Important so the button doesn't create scrollbars */
+            overflow: hidden; 
         }
 
         img {
-            width: 250px;
+            max-width: 100%;
             height: auto;
             border-radius: 15px;
             margin-bottom: 20px;
+            width: 250px; /* Fixed size to prevent layout jumps */
         }
 
         h1 {
             color: #d32f2f;
             font-size: 2.5rem;
+            margin-bottom: 20px;
         }
 
         .buttons {
@@ -35,8 +37,7 @@
             gap: 20px;
             justify-content: center;
             align-items: center;
-            margin-top: 20px;
-            position: relative; /* Helps contain the buttons */
+            width: 100%;
         }
 
         button {
@@ -46,26 +47,27 @@
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
-            z-index: 10;
+            white-space: nowrap; /* Keeps text on one line */
         }
 
         #yesBtn {
             background-color: #4caf50;
             color: white;
             font-weight: bold;
+            z-index: 10; /* Ensures Yes is always on top */
         }
 
         #noBtn {
             background-color: #f44336;
             color: white;
             font-weight: bold;
-            position: relative; /* Essential for movement */
+            position: relative; 
         }
     </style>
 </head>
 <body>
 
-    <img id="mainGif" src="https://media1.tenor.com/m/hnCLe_l5aKkAAAAC/mocha-bear.gif" alt="Cute Bear">
+    <img id="mainGif" src="https://github.com/manishsaraan/valentine/blob/master/img/header.gif?raw=true" alt="Bear asking">
     
     <h1 id="questionText">Will you be my Valentine?</h1>
     
@@ -79,30 +81,47 @@
         const noBtn = document.getElementById('noBtn');
         const questionText = document.getElementById('questionText');
         const mainGif = document.getElementById('mainGif');
+        const buttonGroup = document.getElementById('buttonGroup');
 
-        // 1. MAKE THE NO BUTTON RUN AWAY (Teleport Logic)
-        noBtn.addEventListener('mouseover', () => {
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-            
-            noBtn.style.position = 'absolute';
-            noBtn.style.left = `${x}px`;
-            noBtn.style.top = `${y}px`;
-        });
-
-        // 2. GROWTH LOGIC (Backup in case she manages to click it)
+        // 1. CLICKING NO: Makes Yes bigger and changes text
         noBtn.addEventListener('click', () => {
+            // Increase Yes button size
             const currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
             yesBtn.style.fontSize = (currentSize * 1.5) + 'px';
-            yesBtn.style.padding = (parseFloat(window.getComputedStyle(yesBtn).paddingTop) * 1.5) + 'px ' + (parseFloat(window.getComputedStyle(yesBtn).paddingRight) * 1.5) + 'px';
+            
+            // Increase padding manually to keep it looking good
+            const currentPadding = parseFloat(window.getComputedStyle(yesBtn).paddingTop);
+            yesBtn.style.padding = (currentPadding * 1.5) + 'px ' + (currentPadding * 2) + 'px';
+
+            // Change No button text
+            const phrases = ["Are you sure?", "Really?", "Think again!", "Last chance!", "Saja please!", "Don't do this!", "I'm gonna cry..."];
+            noBtn.innerText = phrases[Math.floor(Math.random() * phrases.length)];
+        });
+
+        // 2. HOVERING NO: Teleports (RUNS AWAY)
+        noBtn.addEventListener('mouseover', () => {
+            // Calculate random position strictly within the screen
+            const maxX = window.innerWidth - noBtn.offsetWidth - 20; 
+            const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+            
+            const randomX = Math.max(10, Math.random() * maxX);
+            const randomY = Math.max(10, Math.random() * maxY);
+
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
         });
 
         // 3. SUCCESS STATE
         yesBtn.addEventListener('click', () => {
-            document.getElementById('buttonGroup').style.display = 'none';
+            // Hide buttons
+            buttonGroup.style.display = 'none';
+            
+            // Change text
             questionText.innerText = "YAYYY!!! ❤️";
-            // Celebration Image
-            mainGif.src = "https://media1.tenor.com/m/gUiu1zyqUHEAAAAC/bear-kiss-bear-kisses.gif";
+            
+            // Change image to the reliable "Hug/Kiss" gif
+            mainGif.src = "https://github.com/manishsaraan/valentine/blob/master/img/yes.gif?raw=true";
         });
     </script>
 </body>
